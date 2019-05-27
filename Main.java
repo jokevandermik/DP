@@ -10,7 +10,7 @@ public class Main {
 		ReizigerOracleDaoImpl db = new ReizigerOracleDaoImpl();
 		
 		Reiziger reiziger1 = new Reiziger();
-		reiziger1.setNaam("Job");
+		reiziger1.setNaam("Joke");
 		db.save(reiziger1);
 		for (Reiziger r : db.findAll()) {
 			System.out.println(r.getNaam());
@@ -18,7 +18,7 @@ public class Main {
 		System.out.println("1");
 		
 		Reiziger reiziger2 = new Reiziger();
-		reiziger2.setNaam("Job2");
+		reiziger2.setNaam("Justin");
 		db.save(reiziger2);
 		for (Reiziger r : db.findAll()) {
 			System.out.println(r.getNaam());
@@ -26,7 +26,7 @@ public class Main {
 		System.out.println("2");
 		
 		Reiziger reiziger3 = new Reiziger();
-		reiziger3.setNaam("Job3");
+		reiziger3.setNaam("Klaas");
 		db.save(reiziger3);
 		
 		for (Reiziger r : db.findAll()) {
@@ -39,7 +39,7 @@ public class Main {
 		for (Reiziger r : db.findAll()) {
 			System.out.println(r.getNaam());
 		}
-		System.out.println("4");
+		System.out.println("Greetje");
 		
 		Date datum = new SimpleDateFormat("dd/MM/yyyy").parse("25/04/2019");
 
