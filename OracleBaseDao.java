@@ -1,20 +1,26 @@
-package p1;
+package p2;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
-abstract public class OracleBaseDao {
-	private String connectionString = "jdbc:oracle:thin:@localhost:1521/xe";
-	private String username = "OV";
-	private String password = "ov";
+public class OracleBaseDao {
 	
-	protected Connection getConnection() {
+	protected Connection getConnection() throws SQLException{
+		String url = "jdbc:oracle:thin:@localhost:1521/xe";
+		String username = "system";
+		String password = "oracle";
+		
+		Connection myConn = null;
+
 		try {
-			return DriverManager.getConnection(this.connectionString, this.username, this.password);		
-		} catch(SQLException e) {
-			System.out.println(e.getMessage());
+			myConn = DriverManager.getConnection(url, username, password);		
 		}
-		return null;
+		catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		return myConn;
+		
+	}
+	
+	public void closeConnection(Connection myConn) throws SQLException{
 	}
 }
