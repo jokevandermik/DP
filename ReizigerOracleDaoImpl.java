@@ -1,52 +1,97 @@
-package p1;
+package p3;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
-public class ReizigerOracleDaoImpl implements ReizigerDao{
-	private ArrayList<Reiziger> reizigers = new ArrayList<Reiziger>();
+public class ReizigerOracleDaoImpl extends OracleBaseDao implements ReizigerDao{	
 	
-	public ArrayList<Reiziger> findAll(){
+	private List<Reiziger> reizigers = new ArrayList<Reiziger>();
+
+	public List<Reiziger> findAll(){
 		return reizigers;
 	}
 	
-	public ArrayList<Reiziger> findByGBdatum(String GBdatum) {
-		ArrayList<Reiziger> reizigers = new ArrayList<Reiziger>();
-		for(Reiziger reiziger : reizigers) {
-			if(GBdatum != null) {
-				if(reiziger.getGBdatum().equals(GBdatum)) {
-					reizigers.add(reiziger);
-				}
+	public List<Reiziger> findAllByGBdatum(String GBdatum){
+		
+		List<Reiziger> list = new ArrayList<Reiziger>();
+		
+		try {
+			Connection myConn = getConnection();
+			
+			Statement myStmt = myConn.createStatement();
+			String strQuery = "SELECT * FROM REIZIGER WHERE gebortedatum = to_date(" + "'" + GBdatum + "'" + ", 'DD-MM-YYYY')";
+			
+			ResultSet rs = myStmt.executeQuery(strQuery);
+			
+			while(rs.next()) {
+				Reiziger reiziger = new Reiziger();
+				reiziger.setVoorletter(rs.getString("VOORLETTERS"));
+				reiziger.setAchternaam(rs.getString("ACHTERNAAM"));
+				list.add(reiziger);
 			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		return reizigers;
-	}
-	
-	public Reiziger save(Reiziger reiziger){
-		if(!reizigers.contains(reiziger)) {
-			reizigers.add(reiziger);
-		}
-		return reiziger;
-	}
-	
-	public Reiziger update(Reiziger reiziger) {
-		if(reizigers.contains(reiziger)) {
-			reizigers.remove(reiziger);
-			reizigers.add(reiziger);
-		}
-		return reiziger;
-	}
-	
-	public boolean delete(Reiziger reiziger) {
-		if(reizigers.contains(reiziger)) {
-			reizigers.remove(reiziger);
-			return true;
-		}
-		return false;
-	}
-	
-	public void CloseConnection() {
+		
+		return list;
 		
 	}
-	
-	
+	public Reiziger save(Reiziger reiziger) {
+		try {
+			int reizigeridint = 0;
+			Connection myConn = getConnection();
+			Statement myStmt = myConn.createStatement();
+			ResultSet myRs = myStmt.executeQuery("SELECT * FROM reiziger ORDER BY reizigerid");
+			while (myRs.next()) {
+				reizigeridint = myRs.getInt("reizigerid");
+			}
+			
+			reizigeridint = reizigeridint + 1;
+			reiziger.setId(reizigeridint);
+			String voorletter = reiziger.getVoorletter();
+			String achternaam = reiziger.getAchternaam();
+			
+			Statement insertStmt = myConn.createStatement();
+			insertStmt.executeQuery("INSERT INTO reiziger(reizigerid, voorletters, achternaam)	VALUES('"+ reizigeridint + "','" + voorletter + "','" + achternaam +  "')");
+		
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		
+		return reiziger;
+
+	}
+	public Reiziger update(Reiziger reiziger) {
+		try {
+			Connection myConn = getConnection();
+			Statement myStmt = myConn.createStatement();
+			
+			String voorletter = reiziger.getVoorletter();
+			String achternaam = reiziger.getAchternaam();
+			
+			String q = "Update REIZIGER SET voorletters = '" + voorletter + "', ACHTERNAAM = '" + achternaam + "' where REIZIGERID = " + reiziger.getId();
+			ResultSet myRs = myStmt.executeQuery(q);
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		
+		return reiziger;		
+	}
+	public boolean delete(Reiziger reiziger) {
+		try {
+			Connection myConn = getConnection();
+			Statement myStmt = myConn.createStatement();
+			ResultSet myRs = myStmt.executeQuery("DELETE FROM REIZIGER WHERE reizigerid = " + reiziger.getId());
+			return true;
+		} catch (Exception exc) {
+			exc.printStackTrace();
+			return false;
+		}		
+	}
 }

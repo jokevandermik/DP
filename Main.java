@@ -1,53 +1,42 @@
-package p1;
+package p3;
 
 import java.util.Date;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.SimpleDateFormat;  
 
 public class Main {
 	public static void main(String[] args) throws ParseException {
 		
+	
 		ReizigerOracleDaoImpl db = new ReizigerOracleDaoImpl();
+		OVChipkaartDaoImpl dbov = new OVChipkaartDaoImpl();
 		
-		Reiziger reiziger1 = new Reiziger();
-		reiziger1.setNaam("Joke");
-		db.save(reiziger1);
-		for (Reiziger r : db.findAll()) {
-			System.out.println(r.getNaam());
-		}
-		System.out.println("1");
+		Reiziger reiziger = new Reiziger();
 		
-		Reiziger reiziger2 = new Reiziger();
-		reiziger2.setNaam("Justin");
-		db.save(reiziger2);
-		for (Reiziger r : db.findAll()) {
-			System.out.println(r.getNaam());
-		}
-		System.out.println("2");
+		reiziger.setVoorletter("J");
+		reiziger.setAchternaam("Stoker");
 		
-		Reiziger reiziger3 = new Reiziger();
-		reiziger3.setNaam("Klaas");
-		db.save(reiziger3);
 		
-		for (Reiziger r : db.findAll()) {
-			System.out.println(r.getNaam());
-		}
-		System.out.println("3");
+		Date datum1 = new SimpleDateFormat("dd/MM/yyyy").parse("17/04/2019");
 		
-		reiziger1.setNaam("JobNieuw");
-		db.update(reiziger1);
-		for (Reiziger r : db.findAll()) {
-			System.out.println(r.getNaam());
-		}
-		System.out.println("Greetje");
-		
-		Date datum = new SimpleDateFormat("dd/MM/yyyy").parse("25/04/2019");
+		reiziger.setGBdatum(datum1);
 
-		reiziger1.setGBdatum(datum);
+		db.save(reiziger);
 		
-		for (Reiziger reiziger : db.findByGBdatum(datum.toString())) {
-			System.out.println(reiziger.getNaam());
+		OVChipkaart ov = new OVChipkaart();
+		
+		ov.setKaartNummer(1234567);
+		ov.setKlasse(1);
+		ov.setId(2);
+		ov.setSaldo(234.43);
+		dbov.save(ov);
+		
+		for (Reiziger r : db.findAllByGBdatum("03-12-2002")) {
+			System.out.println(r.getVoorletter() + " " + r.getAchternaam());
 		}
 		
+		for (OVChipkaart ovv : dbov.findByReiziger(2)) {
+			System.out.println(ovv.getKaartNummer());
+		}
 	}
-}
+} 
