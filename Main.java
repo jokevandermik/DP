@@ -1,53 +1,57 @@
-package p1;
+package hu.nl.hibernate;
 
-import java.util.Date;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 public class Main {
-	public static void main(String[] args) throws ParseException {
-		
-		ReizigerOracleDaoImpl db = new ReizigerOracleDaoImpl();
-		
-		Reiziger reiziger1 = new Reiziger();
-		reiziger1.setNaam("Joke");
-		db.save(reiziger1);
-		for (Reiziger r : db.findAll()) {
-			System.out.println(r.getNaam());
-		}
-		System.out.println("1");
-		
-		Reiziger reiziger2 = new Reiziger();
-		reiziger2.setNaam("Justin");
-		db.save(reiziger2);
-		for (Reiziger r : db.findAll()) {
-			System.out.println(r.getNaam());
-		}
-		System.out.println("2");
-		
-		Reiziger reiziger3 = new Reiziger();
-		reiziger3.setNaam("Klaas");
-		db.save(reiziger3);
-		
-		for (Reiziger r : db.findAll()) {
-			System.out.println(r.getNaam());
-		}
-		System.out.println("3");
-		
-		reiziger1.setNaam("JobNieuw");
-		db.update(reiziger1);
-		for (Reiziger r : db.findAll()) {
-			System.out.println(r.getNaam());
-		}
-		System.out.println("Greetje");
-		
-		Date datum = new SimpleDateFormat("dd/MM/yyyy").parse("25/04/2019");
+	public static void main(String[] args) throws SQLException, ParseException {
 
-		reiziger1.setGBdatum(datum);
+		StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
+		Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
+
+		SessionFactory factory = meta.getSessionFactoryBuilder().build();
+		Session session = factory.openSession();
+		Transaction t = session.beginTransaction();
+
+		Reiziger r = new Reiziger();
+		r.setReizigerId(54);
+		r.setAchternaam("van der Mik");
+		r.setGeboortedatum(new SimpleDateFormat("dd-mm-yy").parse("07-06-01"));
+		r.setVoorletters("J");
+
+		Reiziger r2 = new Reiziger();
+		r2.setReizigerId(55);
+		r2.setAchternaam("vd Mik");
+		r2.setGeboortedatum(new SimpleDateFormat("dd-mm-yy").parse("06-12-80"));
+		r2.setVoorletters("O");
 		
-		for (Reiziger reiziger : db.findByGBdatum(datum.toString())) {
-			System.out.println(reiziger.getNaam());
-		}
+		Reiziger r3 = new Reiziger();
+		r3.setReizigerId(56);
+		r3.setAchternaam("v/d Mik");
+		r3.setGeboortedatum(new SimpleDateFormat("dd-mm-yy").parse("06-12-80"));
+		r3.setVoorletters("S");
 		
+		session.save(r);
+		session.save(r2);
+		session.save(r3);
+		
+		r3.setAchternaam("Mik");
+		
+		session.update(r3);
+		
+		session.delete(r2);
+		
+		t.commit();
+		System.out.println("successfully saved");
+		factory.close();
+		session.close();
 	}
 }
