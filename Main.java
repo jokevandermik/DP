@@ -14,7 +14,7 @@ public class Main {
 		Reiziger reiziger = new Reiziger();
 		
 		reiziger.setVoorletter("J");
-		reiziger.setAchternaam("Stoker");
+		reiziger.setAchternaam("van der Mik");
 		
 		
 		Date datum1 = new SimpleDateFormat("dd/MM/yyyy").parse("17/04/2019");

@@ -5,7 +5,7 @@ import java.sql.*;
 public class OracleBaseDao {
 	
 	protected Connection getConnection() throws SQLException{
-		String url = "jdbc:oracle:thin:@localhost:49161:xe";
+		String url = "jdbc:oracle:thin:@localhost:1521/xe";
 		String username = "system";
 		String password = "oracle";
 		
