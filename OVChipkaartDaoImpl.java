@@ -11,7 +11,8 @@ public class OVChipkaartDaoImpl extends OracleBaseDao implements OVChipkaartDao 
 
 	public List<OVChipkaart> findByReiziger(int reizigerId) {
 		List<OVChipkaart> ovs = new ArrayList<OVChipkaart>();
-		
+		ProductDaoImpl dbproduct = new ProductDaoImpl();
+
 		try {
 			Connection myConn = getConnection();
 			Statement myStmt = myConn.createStatement();
@@ -23,7 +24,11 @@ public class OVChipkaartDaoImpl extends OracleBaseDao implements OVChipkaartDao 
 				ov.setSaldo(rs.getFloat("SALDO"));
 				ov.setId(rs.getInt("REIZIGERID"));
 				ov.setKaartNummer(rs.getInt("KAARTNUMMER"));
+				for (Product p : dbproduct.findByKaartNummer(ov.getKaartNummer())) {
+					ov.voegProductToe(p);	
+				}
 				ovs.add(ov);
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -76,5 +81,24 @@ public class OVChipkaartDaoImpl extends OracleBaseDao implements OVChipkaartDao 
 			exc.printStackTrace();
 			return false;
 		}
+	}
+	
+	public boolean linkProduct(OVChipkaart ov, Product pd) {
+		try {
+			Connection myConn = getConnection();
+			Statement insertStmt = myConn.createStatement();
+			String q = "INSERT INTO "
+					+ "ov_chipkaart_product(OVPRODUCTID, kaartnummer, productnummer, LASTUPDATE, REISPRODUCTSTATUS) "
+					+ "VALUES('" + 11 + "', " 
+					+ ov.getKaartNummer() + ", "
+					+ pd.getProductNummer() + ", "
+					+ "to_date('31-12-2017', 'DD-MM-YYYY')" + ", "
+					+ " 'actief')";
+			ResultSet myRs = insertStmt.executeQuery(q);
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		
+		return true;
 	}
 }

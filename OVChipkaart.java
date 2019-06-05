@@ -1,5 +1,6 @@
 package p3;
 
+
 import java.util.Date;
 
 public class OVChipkaart {
@@ -18,7 +19,7 @@ public class OVChipkaart {
 	}
 	
 	public void setGeldigTot(Date geldigTot) {
-		this.geldigTot = geldigTot;
+		geldigTot = geldigTot;
 	}
 	
 	public Date getGeldigTot() {
@@ -47,5 +48,10 @@ public class OVChipkaart {
 	
 	public int getId() {
 		return id;
+	}
+
+	public void voegProductToe(Product p) {
+		// TODO Auto-generated method stub
+		
 	}
 }

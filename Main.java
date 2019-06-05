@@ -7,10 +7,11 @@ import java.text.SimpleDateFormat;
 public class Main {
 	public static void main(String[] args) throws ParseException {
 		
-	
+		
 		ReizigerOracleDaoImpl db = new ReizigerOracleDaoImpl();
 		OVChipkaartDaoImpl dbov = new OVChipkaartDaoImpl();
-		
+		ProductDaoImpl dbp = new ProductDaoImpl();
+
 		Reiziger reiziger = new Reiziger();
 		
 		reiziger.setVoorletter("J");
@@ -35,6 +36,26 @@ public class Main {
 			System.out.println(r.getVoorletter() + " " + r.getAchternaam());
 		}
 		
+		for (OVChipkaart ovv : dbov.findByReiziger(2)) {
+			System.out.println(ovv.getKaartNummer());
+		}
+		
+		Product product1 = new Product();
+		product1.setProductNaam("2test3");
+		product1.setBeschrijving("Dit is de beschrijving 1");
+		product1.setPrijs(50.2);
+		product1.setProductNummer(14);
+		dbp.save(product1);
+		
+		Product product2 = new Product();
+		product2.setProductNaam("1test4");
+		product2.setBeschrijving("Dit is de beschrijving 2");
+		product2.setPrijs(10.3);
+		product2.setProductNummer(15);
+		dbp.save(product2);
+		
+		dbov.linkProduct(ov, product1);
+
 		for (OVChipkaart ovv : dbov.findByReiziger(2)) {
 			System.out.println(ovv.getKaartNummer());
 		}
