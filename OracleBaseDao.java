@@ -7,7 +7,7 @@ public class OracleBaseDao {
 	protected Connection getConnection() throws SQLException{
 		String url = "jdbc:oracle:thin:@localhost:1521/xe";
 		String username = "system";
-		String password = "oracle";
+		String password = "17Am09Re16";
 		
 		Connection myConn = null;
 
